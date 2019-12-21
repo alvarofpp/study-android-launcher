@@ -1,11 +1,13 @@
 package alvarofpp.study.launcher;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -35,7 +37,7 @@ public class AppAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View v;
 
         if (convertView == null) {
@@ -45,11 +47,26 @@ public class AppAdapter extends BaseAdapter {
             v = convertView;
         }
 
+        LinearLayout mLayout = v.findViewById(R.id.layout);
         ImageView mImage = v.findViewById(R.id.image);
         TextView mLabel = v.findViewById(R.id.label);
 
         mImage.setImageDrawable(this.appList.get(position).getImage());
         mLabel.setText(this.appList.get(position).getName());
+
+        mLayout.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent launchAppIntent = context.getPackageManager().getLaunchIntentForPackage(
+                        appList.get(position).getPackageName()
+                );
+
+                if (launchAppIntent != null) {
+                    context.startActivity(launchAppIntent);
+                }
+            }
+        });
 
         return v;
     }

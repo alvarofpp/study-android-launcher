@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="5sp"
-    android:id="@+id/appLayout">
+    android:id="@+id/layout">
     <ImageView
         android:id="@+id/image"
         android:layout_width="match_parent"
