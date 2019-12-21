@@ -9,11 +9,28 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme"
+            android:launchMode="singleTask"
+            android:stateNotNeeded="true">
+            <!--
+            android:launchMode -> (singleTask) Can only start one task.
+            android:stateNotNeeded -> Can be initialized without reference to previous state.
+            -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+                <!--
+                Indicates that when you press home button,
+                your app will be listed as an option to launch the launcher home or your home activity.
+                -->
+                <category android:name="android.intent.category.HOME" />
+                <!--
+                Indicates that this app can receive implicits intents of others apps.
+                -->
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
     </application>
