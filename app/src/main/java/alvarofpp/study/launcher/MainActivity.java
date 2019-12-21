@@ -1,5 +1,6 @@
 package alvarofpp.study.launcher;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private void initializeDrawer() {
         View mBottomSheet = findViewById(R.id.bottomSheet);
         final GridView mDrawerGridView = findViewById(R.id.drawerGrid);
-        BottomSheetBehavior mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+        final BottomSheetBehavior mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
 
         mBottomSheetBehavior.setHideable(false);
         mBottomSheetBehavior.setPeekHeight(300);
@@ -36,6 +37,23 @@ public class MainActivity extends AppCompatActivity {
         this.installedAppList = getInstalledAppList();
 
         mDrawerGridView.setAdapter(new AppAdapter(getApplicationContext(), this.installedAppList));
+
+        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View view, int newState) {
+                if (newState == BottomSheetBehavior.STATE_HIDDEN && mDrawerGridView.getChildAt(0).getY() != 0) {
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+                if (newState == BottomSheetBehavior.STATE_DRAGGING && mDrawerGridView.getChildAt(0).getY() != 0) {
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View view, float slideOffset) {
+
+            }
+        });
     }
 
     private List<AppObject> getInstalledAppList() {

@@ -6,7 +6,7 @@ After finishing, I intend to add more functionalities in this app.
 
 ## Functionalities
 
-- [ ] List of installed apps;
+- [X] List of installed apps;
 - [ ] Initialize home screen;
 - [ ] Placing apps in the home screen;
 - [ ] Moving apps around the home screen;
