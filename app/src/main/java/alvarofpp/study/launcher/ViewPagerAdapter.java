@@ -14,10 +14,12 @@ import java.util.ArrayList;
 public class ViewPagerAdapter extends PagerAdapter {
     Context context;
     ArrayList<PagerObject> pagerAppList;
+    int cellHeight;
 
-    public ViewPagerAdapter(Context context, ArrayList<PagerObject> pagerAppList) {
+    public ViewPagerAdapter(Context context, ArrayList<PagerObject> pagerAppList, int cellHeight) {
         this.context = context;
         this.pagerAppList = pagerAppList;
+        this.cellHeight = cellHeight;
     }
 
     @NonNull
@@ -27,7 +29,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.pager_layout, container, false);
 
         final GridView mGridView = layout.findViewById(R.id.grid);
-        mGridView.setAdapter(new AppAdapter(this.context, this.pagerAppList.get(position).getAppList()));
+        mGridView.setAdapter(new AppAdapter(this.context, this.pagerAppList.get(position).getAppList(), this.cellHeight));
 
         container.addView(layout);
         return layout;

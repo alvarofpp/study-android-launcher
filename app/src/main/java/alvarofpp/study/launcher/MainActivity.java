@@ -6,9 +6,11 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.GridView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -19,11 +21,16 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     List<AppObject> installedAppList = new ArrayList<>();
     ViewPager mViewPager;
+    int cellHeight;
+
+    int NUMBER_OF_ROWS = 5;
+    int DRAWER_PEEK_HEIGHT = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getSupportActionBar().hide();
 
         initializeHome();
         initializeDrawer();
@@ -41,8 +48,10 @@ public class MainActivity extends AppCompatActivity {
         pagerAppList.add(new PagerObject(appList));
         pagerAppList.add(new PagerObject(appList));
 
+        cellHeight = (getDisplayContextHeight() - this.DRAWER_PEEK_HEIGHT) / this.NUMBER_OF_ROWS;
+
         this.mViewPager = findViewById(R.id.viewPager);
-        this.mViewPager.setAdapter(new ViewPagerAdapter(this, pagerAppList));
+        this.mViewPager.setAdapter(new ViewPagerAdapter(this, pagerAppList, this.cellHeight));
     }
 
     private void initializeDrawer() {
@@ -51,11 +60,11 @@ public class MainActivity extends AppCompatActivity {
         final BottomSheetBehavior mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
 
         mBottomSheetBehavior.setHideable(false);
-        mBottomSheetBehavior.setPeekHeight(100);
+        mBottomSheetBehavior.setPeekHeight(this.DRAWER_PEEK_HEIGHT);
 
         this.installedAppList = getInstalledAppList();
 
-        mDrawerGridView.setAdapter(new AppAdapter(getApplicationContext(), this.installedAppList));
+        mDrawerGridView.setAdapter(new AppAdapter(getApplicationContext(), this.installedAppList, this.cellHeight));
 
         mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
@@ -94,5 +103,27 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return list;
+    }
+
+    private int getDisplayContextHeight() {
+        final WindowManager windowManager = getWindowManager();
+        final Point size = new Point();
+        int screenHeight = 0;
+        int actionBarHeight = 0;
+        int statusBarHeight = 0;
+
+        if (getActionBar() != null) {
+            actionBarHeight = getActionBar().getHeight();
+        }
+
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            statusBarHeight = getResources().getDimensionPixelSize(resourceId);
+        }
+        int contentTop = (findViewById(android.R.id.content)).getTop();
+        windowManager.getDefaultDisplay().getSize(size);
+        screenHeight = size.y;
+
+        return screenHeight - contentTop - actionBarHeight - statusBarHeight;
     }
 }

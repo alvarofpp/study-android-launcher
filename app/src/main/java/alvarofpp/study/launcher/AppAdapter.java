@@ -15,10 +15,12 @@ import java.util.List;
 public class AppAdapter extends BaseAdapter {
     private Context context;
     private List<AppObject> appList;
+    private int cellHeight;
 
-    public AppAdapter(Context context, List<AppObject> appList) {
+    public AppAdapter(Context context, List<AppObject> appList, int cellHeight) {
         this.context = context;
         this.appList = appList;
+        this.cellHeight = cellHeight;
     }
 
     @Override
@@ -53,6 +55,9 @@ public class AppAdapter extends BaseAdapter {
 
         mImage.setImageDrawable(this.appList.get(position).getImage());
         mLabel.setText(this.appList.get(position).getName());
+
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, this.cellHeight);
+        mLayout.setLayoutParams(lp);
 
         mLayout.setOnClickListener(new View.OnClickListener() {
 
