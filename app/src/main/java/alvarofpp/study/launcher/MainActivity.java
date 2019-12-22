@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
@@ -47,13 +48,13 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<AppObject> appList2 = new ArrayList<>();
         ArrayList<AppObject> appList3 = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            appList1.add(new AppObject("", "", getResources().getDrawable(R.drawable.ic_launcher_foreground)));
+            appList1.add(new AppObject("", "", getResources().getDrawable(R.drawable.ic_launcher_foreground), false));
         }
         for (int i = 0; i < 20; i++) {
-            appList2.add(new AppObject("", "", getResources().getDrawable(R.drawable.ic_launcher_foreground)));
+            appList2.add(new AppObject("", "", getResources().getDrawable(R.drawable.ic_launcher_foreground), false));
         }
         for (int i = 0; i < 20; i++) {
-            appList3.add(new AppObject("", "", getResources().getDrawable(R.drawable.ic_launcher_foreground)));
+            appList3.add(new AppObject("", "", getResources().getDrawable(R.drawable.ic_launcher_foreground), false));
         }
         pagerAppList.add(new PagerObject(appList1));
         pagerAppList.add(new PagerObject(appList2));
@@ -96,19 +97,30 @@ public class MainActivity extends AppCompatActivity {
             public void onSlide(@NonNull View view, float slideOffset) {
 
             }
-        });
+        });                                                                                                                             
     }
 
     public void itemPress(AppObject app)
     {
-        if (this.mAppDrag != null) {
+        if (this.mAppDrag != null && !app.getName().equals("")) {
+            Toast.makeText(this, "Cell Already Occupied", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (this.mAppDrag != null && !app.getAppInDrawer()) {
             app.setPackageName(this.mAppDrag.getPackageName());
             app.setName(this.mAppDrag.getName());
             app.setImage(this.mAppDrag.getImage());
-            this.mViewPagerAdapter.notifyGridChanged();
+
+            if (!this.mAppDrag.getAppInDrawer()) {
+                this.mAppDrag.setPackageName("");
+                this.mAppDrag.setName("");
+                this.mAppDrag.setImage(getResources().getDrawable(R.drawable.ic_launcher_foreground));
+                this.mAppDrag.setAppInDrawer(false);
+            }
 
             this.mAppDrag = null;
-            return;
+            this.mViewPagerAdapter.notifyGridChanged();
         } else {
             Intent launchAppIntent = getApplicationContext().getPackageManager().getLaunchIntentForPackage(
                     app.getPackageName()
@@ -143,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
             String appPackageName = untreatedApp.activityInfo.packageName;
             Drawable appImage = untreatedApp.activityInfo.loadIcon(getPackageManager());
 
-            AppObject app = new AppObject(appPackageName, appName, appImage);
+            AppObject app = new AppObject(appPackageName, appName, appImage, true);
             if (!list.contains(app)) {
                 list.add(app);
             }
