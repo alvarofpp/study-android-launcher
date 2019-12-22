@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     int cellHeight;
     AppObject mAppDrag = null;
     ViewPagerAdapter mViewPagerAdapter;
+    int numRow = 0;
+    int numColumn = 0;
 
     int NUMBER_OF_ROWS = 5;
     int DRAWER_PEEK_HEIGHT = 100;
@@ -73,13 +75,13 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<AppObject> appList1 = new ArrayList<>();
         ArrayList<AppObject> appList2 = new ArrayList<>();
         ArrayList<AppObject> appList3 = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < this.numColumn*this.numRow; i++) {
             appList1.add(new AppObject("", "", getResources().getDrawable(R.drawable.ic_launcher_foreground), false));
         }
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < this.numColumn*this.numRow; i++) {
             appList2.add(new AppObject("", "", getResources().getDrawable(R.drawable.ic_launcher_foreground), false));
         }
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < this.numColumn*this.numRow; i++) {
             appList3.add(new AppObject("", "", getResources().getDrawable(R.drawable.ic_launcher_foreground), false));
         }
         pagerAppList.add(new PagerObject(appList1));
@@ -87,10 +89,10 @@ public class MainActivity extends AppCompatActivity {
         pagerAppList.add(new PagerObject(appList3));
 
 
-        cellHeight = (getDisplayContextHeight() - this.DRAWER_PEEK_HEIGHT) / this.NUMBER_OF_ROWS;
+        cellHeight = (getDisplayContextHeight() - this.DRAWER_PEEK_HEIGHT) / this.numRow;
 
         this.mViewPager = findViewById(R.id.viewPager);
-        this.mViewPagerAdapter = new ViewPagerAdapter(this, pagerAppList, this.cellHeight);
+        this.mViewPagerAdapter = new ViewPagerAdapter(this, pagerAppList, this.cellHeight, this.numColumn);
         this.mViewPager.setAdapter(mViewPagerAdapter);
     }
 
@@ -224,6 +226,14 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences(this.PREFS_NAME, MODE_PRIVATE);
         String imageUri = sharedPreferences.getString("imageUri", null);
+        int numRow = sharedPreferences.getInt("numRow", 7);
+        int numColumn = sharedPreferences.getInt("numColumn", 5);
+
+        if (this.numRow != numRow || this.numColumn != numColumn) {
+            this.numRow = numRow;
+            this.numColumn = numColumn;
+            initializeHome();
+        }
 
         if (imageUri != null) {
             mHomeScreenImage.setImageURI(Uri.parse(imageUri));
