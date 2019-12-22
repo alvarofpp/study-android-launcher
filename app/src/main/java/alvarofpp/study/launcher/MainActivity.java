@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         this.mBottomSheetBehavior.setPeekHeight(this.DRAWER_PEEK_HEIGHT);
 
         this.installedAppList = getInstalledAppList();
-        this.mDrawerGridView.setAdapter(new AppAdapter(getApplicationContext(), this.installedAppList, this.cellHeight));
+        this.mDrawerGridView.setAdapter(new AppAdapter(this, this.installedAppList, this.cellHeight));
 
         this.mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
