@@ -2,6 +2,7 @@ package alvarofpp.study.launcher;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
@@ -17,13 +18,31 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     List<AppObject> installedAppList = new ArrayList<>();
+    ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initializeHome();
         initializeDrawer();
+    }
+
+    private void initializeHome() {
+        ArrayList<PagerObject> pagerAppList = new ArrayList<>();
+        ArrayList<AppObject> appList = new ArrayList<>();
+
+        for (int i = 0; i < 20; i++) {
+            appList.add(new AppObject("", "", getResources().getDrawable(R.drawable.ic_launcher_foreground)));
+        }
+
+        pagerAppList.add(new PagerObject(appList));
+        pagerAppList.add(new PagerObject(appList));
+        pagerAppList.add(new PagerObject(appList));
+
+        this.mViewPager = findViewById(R.id.viewPager);
+        this.mViewPager.setAdapter(new ViewPagerAdapter(this, pagerAppList));
     }
 
     private void initializeDrawer() {
@@ -32,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         final BottomSheetBehavior mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
 
         mBottomSheetBehavior.setHideable(false);
-        mBottomSheetBehavior.setPeekHeight(300);
+        mBottomSheetBehavior.setPeekHeight(100);
 
         this.installedAppList = getInstalledAppList();
 
