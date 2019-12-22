@@ -19,9 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    BottomSheetBehavior mBottomSheetBehavior;
+    GridView mDrawerGridView;
     List<AppObject> installedAppList = new ArrayList<>();
     ViewPager mViewPager;
     int cellHeight;
+    AppObject mAppDrag = null;
+    ViewPagerAdapter mViewPagerAdapter;
 
     int NUMBER_OF_ROWS = 5;
     int DRAWER_PEEK_HEIGHT = 100;
@@ -38,37 +42,48 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeHome() {
         ArrayList<PagerObject> pagerAppList = new ArrayList<>();
-        ArrayList<AppObject> appList = new ArrayList<>();
 
+        ArrayList<AppObject> appList1 = new ArrayList<>();
+        ArrayList<AppObject> appList2 = new ArrayList<>();
+        ArrayList<AppObject> appList3 = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            appList.add(new AppObject("", "", getResources().getDrawable(R.drawable.ic_launcher_foreground)));
+            appList1.add(new AppObject("", "", getResources().getDrawable(R.drawable.ic_launcher_foreground)));
         }
+        for (int i = 0; i < 20; i++) {
+            appList2.add(new AppObject("", "", getResources().getDrawable(R.drawable.ic_launcher_foreground)));
+        }
+        for (int i = 0; i < 20; i++) {
+            appList3.add(new AppObject("", "", getResources().getDrawable(R.drawable.ic_launcher_foreground)));
+        }
+        pagerAppList.add(new PagerObject(appList1));
+        pagerAppList.add(new PagerObject(appList2));
+        pagerAppList.add(new PagerObject(appList3));
 
-        pagerAppList.add(new PagerObject(appList));
-        pagerAppList.add(new PagerObject(appList));
-        pagerAppList.add(new PagerObject(appList));
 
         cellHeight = (getDisplayContextHeight() - this.DRAWER_PEEK_HEIGHT) / this.NUMBER_OF_ROWS;
 
         this.mViewPager = findViewById(R.id.viewPager);
-        this.mViewPager.setAdapter(new ViewPagerAdapter(this, pagerAppList, this.cellHeight));
+        this.mViewPagerAdapter = new ViewPagerAdapter(this, pagerAppList, this.cellHeight);
+        this.mViewPager.setAdapter(mViewPagerAdapter);
     }
 
     private void initializeDrawer() {
         View mBottomSheet = findViewById(R.id.bottomSheet);
-        final GridView mDrawerGridView = findViewById(R.id.drawerGrid);
-        final BottomSheetBehavior mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
+        this.mDrawerGridView = findViewById(R.id.drawerGrid);
+        this.mBottomSheetBehavior = BottomSheetBehavior.from(mBottomSheet);
 
-        mBottomSheetBehavior.setHideable(false);
-        mBottomSheetBehavior.setPeekHeight(this.DRAWER_PEEK_HEIGHT);
+        this.mBottomSheetBehavior.setHideable(false);
+        this.mBottomSheetBehavior.setPeekHeight(this.DRAWER_PEEK_HEIGHT);
 
         this.installedAppList = getInstalledAppList();
+        this.mDrawerGridView.setAdapter(new AppAdapter(getApplicationContext(), this.installedAppList, this.cellHeight));
 
-        mDrawerGridView.setAdapter(new AppAdapter(getApplicationContext(), this.installedAppList, this.cellHeight));
-
-        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        this.mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View view, int newState) {
+                if (mAppDrag != null) {
+                    return;
+                }
                 if (newState == BottomSheetBehavior.STATE_HIDDEN && mDrawerGridView.getChildAt(0).getY() != 0) {
                     mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                 }
@@ -82,6 +97,38 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void itemPress(AppObject app)
+    {
+        if (this.mAppDrag != null) {
+            app.setPackageName(this.mAppDrag.getPackageName());
+            app.setName(this.mAppDrag.getName());
+            app.setImage(this.mAppDrag.getImage());
+            this.mViewPagerAdapter.notifyGridChanged();
+
+            this.mAppDrag = null;
+            return;
+        } else {
+            Intent launchAppIntent = getApplicationContext().getPackageManager().getLaunchIntentForPackage(
+                    app.getPackageName()
+            );
+
+            if (launchAppIntent != null) {
+                getApplicationContext().startActivity(launchAppIntent);
+            }
+        }
+    }
+
+    public void itemLongPress(AppObject app)
+    {
+        collapseDrawer();
+        this.mAppDrag = app;
+    }
+
+    private void collapseDrawer() {
+        this.mDrawerGridView.setY(0);
+        this.mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 
     private List<AppObject> getInstalledAppList() {

@@ -24,4 +24,16 @@ public class AppObject {
     public Drawable getImage() {
         return image;
     }
+
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setImage(Drawable image) {
+        this.image = image;
+    }
 }

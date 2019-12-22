@@ -1,7 +1,6 @@
 package alvarofpp.study.launcher;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,16 +59,16 @@ public class AppAdapter extends BaseAdapter {
         mLayout.setLayoutParams(lp);
 
         mLayout.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
-                Intent launchAppIntent = context.getPackageManager().getLaunchIntentForPackage(
-                        appList.get(position).getPackageName()
-                );
-
-                if (launchAppIntent != null) {
-                    context.startActivity(launchAppIntent);
-                }
+                ((MainActivity) context).itemPress(appList.get(position));
+            }
+        });
+        mLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ((MainActivity) context).itemLongPress(appList.get(position));
+                return false;
             }
         });
 
