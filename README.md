@@ -7,8 +7,8 @@ After finishing, I intend to add more functionalities in this app.
 ## Functionalities
 
 - [X] List of installed apps;
-- [ ] Initialize home screen;
-- [ ] Placing apps in the home screen;
-- [ ] Moving apps around the home screen;
+- [X] Initialize home screen;
+- [X] Placing apps in the home screen;
+- [X] Moving apps around the home screen;
 - [ ] Choosing a background image;
 - [ ] Changing the grid size;
