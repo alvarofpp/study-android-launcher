@@ -1,4 +1,4 @@
-package alvarofpp.study.launcher;
+package alvarofpp.study.launcher.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.List;
+
+import alvarofpp.study.launcher.objects.AppObject;
+import alvarofpp.study.launcher.MainActivity;
+import alvarofpp.study.launcher.R;
 
 public class AppAdapter extends BaseAdapter {
     private Context context;

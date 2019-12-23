@@ -1,4 +1,4 @@
-package alvarofpp.study.launcher;
+package alvarofpp.study.launcher.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
 import java.util.ArrayList;
+
+import alvarofpp.study.launcher.objects.PagerObject;
+import alvarofpp.study.launcher.R;
 
 public class ViewPagerAdapter extends PagerAdapter {
     Context context;

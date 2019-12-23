@@ -6,9 +6,10 @@ After finishing, I intend to add more functionalities in this app.
 
 ## Functionalities
 
+**Course**:
 - [X] List of installed apps;
 - [X] Initialize home screen;
 - [X] Placing apps in the home screen;
 - [X] Moving apps around the home screen;
-- [ ] Choosing a background image;
-- [ ] Changing the grid size;
+- [X] Choosing a background image;
+- [X] Changing the grid size;

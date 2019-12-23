@@ -1,6 +1,9 @@
-package alvarofpp.study.launcher;
+package alvarofpp.study.launcher.objects;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
+
+import alvarofpp.study.launcher.R;
 
 public class AppObject {
     private String packageName;
@@ -15,6 +18,12 @@ public class AppObject {
         this.isAppInDrawer = isAppInDrawer;
     }
 
+    public void setDefaultValues(Context context) {
+        this.setPackageName("");
+        this.setName("");
+        this.setImage(context.getResources().getDrawable(R.drawable.ic_launcher_foreground));
+        this.setAppInDrawer(false);
+    }
 
     public String getPackageName() {
         return packageName;

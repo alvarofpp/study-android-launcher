@@ -1,4 +1,4 @@
-package alvarofpp.study.launcher;
+package alvarofpp.study.launcher.activities;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import alvarofpp.study.launcher.R;
 
 public class SettingsActivity extends AppCompatActivity {
     ImageView mHomeScreenImage;

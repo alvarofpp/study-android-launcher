@@ -26,6 +26,12 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.util.ArrayList;
 import java.util.List;
 
+import alvarofpp.study.launcher.activities.SettingsActivity;
+import alvarofpp.study.launcher.adapters.AppAdapter;
+import alvarofpp.study.launcher.adapters.ViewPagerAdapter;
+import alvarofpp.study.launcher.objects.AppObject;
+import alvarofpp.study.launcher.objects.PagerObject;
+
 public class MainActivity extends AppCompatActivity {
     BottomSheetBehavior mBottomSheetBehavior;
     GridView mDrawerGridView;
@@ -37,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
     int numRow = 0;
     int numColumn = 0;
 
-    int NUMBER_OF_ROWS = 5;
     int DRAWER_PEEK_HEIGHT = 100;
     String PREFS_NAME = "NovaPrefs";
 
@@ -72,22 +77,9 @@ public class MainActivity extends AppCompatActivity {
     private void initializeHome() {
         ArrayList<PagerObject> pagerAppList = new ArrayList<>();
 
-        ArrayList<AppObject> appList1 = new ArrayList<>();
-        ArrayList<AppObject> appList2 = new ArrayList<>();
-        ArrayList<AppObject> appList3 = new ArrayList<>();
-        for (int i = 0; i < this.numColumn*this.numRow; i++) {
-            appList1.add(new AppObject("", "", getResources().getDrawable(R.drawable.ic_launcher_foreground), false));
+        for (int page = 0; page < 3; page++) {
+            pagerAppList.add(new PagerObject(this.numRow, this.numColumn, getApplicationContext()));
         }
-        for (int i = 0; i < this.numColumn*this.numRow; i++) {
-            appList2.add(new AppObject("", "", getResources().getDrawable(R.drawable.ic_launcher_foreground), false));
-        }
-        for (int i = 0; i < this.numColumn*this.numRow; i++) {
-            appList3.add(new AppObject("", "", getResources().getDrawable(R.drawable.ic_launcher_foreground), false));
-        }
-        pagerAppList.add(new PagerObject(appList1));
-        pagerAppList.add(new PagerObject(appList2));
-        pagerAppList.add(new PagerObject(appList3));
-
 
         cellHeight = (getDisplayContextHeight() - this.DRAWER_PEEK_HEIGHT) / this.numRow;
 
@@ -113,23 +105,25 @@ public class MainActivity extends AppCompatActivity {
                 if (mAppDrag != null) {
                     return;
                 }
-                if (newState == BottomSheetBehavior.STATE_COLLAPSED && mDrawerGridView.getChildAt(0).getY() != 0) {
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                }
-                if (newState == BottomSheetBehavior.STATE_DRAGGING && mDrawerGridView.getChildAt(0).getY() != 0) {
-                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                if (mDrawerGridView.getChildAt(0).getY() != 0) {
+                    switch (newState) {
+                        case BottomSheetBehavior.STATE_COLLAPSED:
+                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                            break;
+                        case BottomSheetBehavior.STATE_DRAGGING:
+                            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                            break;
+                    }
                 }
             }
 
             @Override
             public void onSlide(@NonNull View view, float slideOffset) {
-
             }
         });
     }
 
-    public void itemPress(AppObject app)
-    {
+    public void itemPress(AppObject app) {
         if (this.mAppDrag != null && !app.getName().equals("")) {
             Toast.makeText(this, "Cell Already Occupied", Toast.LENGTH_SHORT).show();
             return;
@@ -141,10 +135,7 @@ public class MainActivity extends AppCompatActivity {
             app.setImage(this.mAppDrag.getImage());
 
             if (!this.mAppDrag.getAppInDrawer()) {
-                this.mAppDrag.setPackageName("");
-                this.mAppDrag.setName("");
-                this.mAppDrag.setImage(getResources().getDrawable(R.drawable.ic_launcher_foreground));
-                this.mAppDrag.setAppInDrawer(false);
+                this.mAppDrag.setDefaultValues(getApplicationContext());
             }
 
             this.mAppDrag = null;
@@ -153,21 +144,20 @@ public class MainActivity extends AppCompatActivity {
             Intent launchAppIntent = getApplicationContext().getPackageManager().getLaunchIntentForPackage(
                     app.getPackageName()
             );
-
             if (launchAppIntent != null) {
                 getApplicationContext().startActivity(launchAppIntent);
             }
         }
     }
 
-    public void itemLongPress(AppObject app)
-    {
+    public void itemLongPress(AppObject app) {
         collapseDrawer();
         this.mAppDrag = app;
     }
 
     private void collapseDrawer() {
-        this.mDrawerGridView.setY(this.DRAWER_PEEK_HEIGHT);
+        this.mDrawerGridView.setY(this.
+                DRAWER_PEEK_HEIGHT);
         this.mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 
