@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -26,14 +25,15 @@
             -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
                 <!--
                 Indicates that when you press home button,
                 your app will be listed as an option to launch the launcher home or your home activity.
                 -->
                 <category android:name="android.intent.category.HOME" />
-                <!--                 Indicates that this app can receive implicits intents of others apps. -->
+                <!--
+                Indicates that this app can receive implicits intents of others apps.
+                -->
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
